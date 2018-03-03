@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+	<head>
+	    <title>My Image Board</title>
+	    <link rel="stylesheet" href='./stylesheet.css'>
+	    <link href="https://fonts.googleapis.com/css?family=Risque" rel="stylesheet">
+	</head>
+	<header>
+		<h1>Squirrel is the Best!</h1>
+	</header>
+	<body>
+		<div id="main">
+			<div class="upload-container">
+				<h2>Add image now</h2>
+				<form>
+					<input v-model="uploadData.title" type="text" name="title" placeholder="Title">
+					<input v-model="uploadData.description" type="text" name="description" placeholder="Description">
+					<input v-model="uploadData.username" type="text" name="username" placeholder="Username">
+					<br><input type="file" name="file" v-on:change="chooseFile">
+					<button type="button" name="button" v-on:click="uploadFile">Upload</button></br>
+				</form>	
+			</div>
+			<div  class="all-images" v-if="images.length > 0">
+				<div class="img-container" v-for="image in images">
+					<img v-bind:src="image.image" v-on:click="getImgId(image.id)">
+					<!-- getImgId - на клик запускается фун-ия с аргументом (id), который получили с res.json({image: imgData }), image объект с ключом id -->
+					<p>{{image.title}}</p>
+					<p>{{image.description}}</p>
+				</div>	
+			</div> 
+				<!-- <div class="more-button" v-on:click="getMoreImages"><p>more</p></div> -->
+			<big-image-component v-if="curImg" v-bind:img-id="curImg" v-on:changed="hideImage"></big-image-component> 
+			<!--1) компонент должен находиться в диве app.vue, темплэйт за пределами мэйн дива.
+			2) если curImg не пустая строка, то используем значение curImg, props (imgId) will always be assigned using v-bind 
+			3) v-bind:img-id - HTML attributes are case-insensitive and camelCased props need to use their kebab-case-->	
+		</div>
+		<script id="big-image-template" type="x-template">
+			<div v-if="imgData">
+				<div class="template-container">
+					<div class="close-button" v-on:click="hide"><p>close</p></div>
+					<div class="big-container">
+						<div class="image-container">
+							<img v-bind:src="imgData.image">
+							<h2>{{imgData.title}}</h2>
+							<br><h3>{{imgData.description}}</h3>
+							<p>Uploaded by {{imgData.username}} on {{imgData.created_at}}</p></br>
+						</div>
+						<div class="comments-input-container">
+							<h2>Add a Comment!</h2>
+							<form>
+								<input  v-model="comments.comment" type="text" name="comment" placeholder="comment">
+								<input v-model="comments.username" type="text" name="username" placeholder="username">
+								<button type="button" name="button" v-on:click="uploadComment">SUBMIT</button>
+							</form>
+							<div v-if="comments">
+								<div class="comments-container" v-for="comment in comments">
+									<div class="single-comment">
+										<h3>{{comment.comment}}</h3>
+										<p>{{comment.username}} on {{comment.created_at}}</p>
+									</div>
+								</div>								
+							</div>
+						</div> 
+
+					</div>
+				</div>
+			</div>
+		</script>
+	
+    <script src="/js/vue.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/script.js"></script>
+	</body>
+</html>
+	<!-- 
+					
+<!- //w -->
